@@ -128,26 +128,6 @@
 				textLine = self.AppendTextLine(itemName, self.CHANGELOOK_ITEMNAME_COLOR, True)
 				textLine.SetFeather()
 		
-		def AppendChangeLookInfoPrivateShopWIndow(self, slotIndex):
-			changelookvnum = shop.GetPrivateShopItemChangeLookVnum(slotIndex)
-			if not changelookvnum == 0:
-				self.AppendSpace(5)
-				self.AppendTextLine("[ " + localeInfo.CHANGE_LOOK_TITLE+" ]", self.CHANGELOOK_TITLE_COLOR)
-				itemName = item.GetItemNameByVnum(changelookvnum)
-				
-				if item.GetItemType() == item.ITEM_TYPE_COSTUME:
-					if item.GetItemSubType() == item.COSTUME_TYPE_BODY:
-						malefemale = ""
-						if item.IsAntiFlag(item.ITEM_ANTIFLAG_MALE):
-							malefemale = localeInfo.FOR_FEMALE
-
-						if item.IsAntiFlag(item.ITEM_ANTIFLAG_FEMALE):
-							malefemale = localeInfo.FOR_MALE
-						itemName += " ( " + malefemale +  " )"
-						
-				textLine = self.AppendTextLine(itemName, self.CHANGELOOK_ITEMNAME_COLOR, True)
-				textLine.SetFeather()
-		
 		def AppendChangeLookInfoShopWIndow(self, slotIndex):
 			changelookvnum = shop.GetItemChangeLookVnum(slotIndex)
 			if not changelookvnum == 0:
