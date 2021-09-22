@@ -112,18 +112,18 @@ void CSlotWindow::DeactivateNewSlotEffect(const DWORD dwSlotIndex)
 			NewSlotEffect->Hide();
 }
 
-void UI::CSlotWindow::SetNewSlotDiffuseColor(const DWORD dwIndex, const BYTE blType)
+void CSlotWindow::SetNewSlotDiffuseColor(const DWORD dwIndex, const BYTE blType)
 {
 	TSlot* pSlot;
 	if (!GetSlotPointer(dwIndex, &pSlot))
 		return;
 
-	for (auto& TransmutationEffect : pSlot->pNewSlotEffect)
+	for (auto& NewSlotEffect : pSlot->pNewSlotEffect)
 	{
-		if (TransmutationEffect == nullptr)
+		if (NewSlotEffect == nullptr)
 			continue;
 
-		const auto& vecImage = TransmutationEffect->GetImageVector();
+		const auto& vecImage = NewSlotEffect->GetImageVector();
 		if (vecImage.empty())
 			continue;
 

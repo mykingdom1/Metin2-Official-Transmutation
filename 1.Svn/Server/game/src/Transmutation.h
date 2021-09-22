@@ -6,8 +6,7 @@
 #pragma once
 
 #if defined(__BL_TRANSMUTATION__)
-#include "../common/length.h"
-//#include "../../common/length.h"
+#include "../../common/length.h"
 #include <array>
 
 class CTransmutation
