@@ -118,6 +118,7 @@ void CSlotWindow::SetNewSlotDiffuseColor(const DWORD dwIndex, const BYTE blType)
 	if (!GetSlotPointer(dwIndex, &pSlot))
 		return;
 
+	const D3DXCOLOR color{ GetSlotColor(blType) };
 	for (auto& NewSlotEffect : pSlot->pNewSlotEffect)
 	{
 		if (NewSlotEffect == nullptr)
@@ -132,7 +133,6 @@ void CSlotWindow::SetNewSlotDiffuseColor(const DWORD dwIndex, const BYTE blType)
 			if (SlotImage == nullptr || SlotImage->IsEmpty())
 				continue;
 
-			const D3DXCOLOR color{ GetSlotColor(blType) };
 			SlotImage->SetDiffuseColor(color.r, color.g, color.b, color.a);
 		}
 	}
