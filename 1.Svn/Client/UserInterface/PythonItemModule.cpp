@@ -82,6 +82,10 @@ PyObject* itemIsChangeLookClearScroll(PyObject* poSelf, PyObject* poArgs)
 		{ "LoadItemTable",					itemLoadItemTable,						METH_VARARGS },
 
 ///Add
+#if defined(__BL_MOVE_COSTUME_ATTR__) || defined(__BL_TRANSMUTATION__)
+		{ "GetItemNameByVnum",				itemGetItemNameByVnum,					METH_VARARGS },
+#endif
+
 #if defined(__BL_TRANSMUTATION__)
 		{ "IsPossibleChangeLookLeft",		itemIsPossibleChangeLookLeft,			METH_VARARGS },
 		{ "IsPossibleChangeLookRight",		itemIsPossibleChangeLookRight,			METH_VARARGS },
