@@ -5,6 +5,21 @@ PyObject* itemLoadItemTable(PyObject* poSelf, PyObject* poArgs)
 }
 
 ///Add
+#if defined(__BL_MOVE_COSTUME_ATTR__) || defined(__BL_TRANSMUTATION__)
+PyObject* itemGetItemNameByVnum(PyObject* poSelf, PyObject* poArgs)
+{
+	DWORD dwVirtualNumber;
+	if (!PyTuple_GetUnsignedLong(poArgs, 0, &dwVirtualNumber))
+		return Py_BadArgument();
+	
+	CItemData* pItemData;
+	if (!CItemManager::Instance().GetItemDataPointer(dwVirtualNumber, &pItemData))
+		return Py_BuildException();
+
+	return Py_BuildValue("s", pItemData->GetName());
+}
+#endif
+
 #if defined(__BL_TRANSMUTATION__)
 PyObject* itemIsPossibleChangeLookLeft(PyObject* poSelf, PyObject* poArgs)
 {
