@@ -32,8 +32,27 @@ CTransmutation::~CTransmutation()
 	if (ch == nullptr)
 		return;
 
-	if (ch->GetTransmutation())
+	if (ch->GetTransmutation() || ch->GetExchange() || ch->IsOpenSafebox() || ch->GetShopOwner() || ch->GetMyShop() || ch->IsCubeOpen()
+#if defined(__BL_SELECT_ATTR__)
+		|| ch->IsSelectAttr()
+#endif
+#if defined(__BL_MOVE_COSTUME_ATTR__)
+		|| ch->IsItemComb()
+#endif
+#if defined(__BL_MAILBOX__)
+		|| ch->GetMailBox()
+#endif
+#if defined(__BL_67_ATTR__)
+		|| ch->Is67AttrOpen()
+#endif
+#if defined(BL_PRIVATESHOP_SEARCH_SYSTEM)
+		|| ch->GetPrivateShopSearchState() != SHOP_SEARCH_OFF
+#endif
+		)
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, "You have to close other windows.");
 		return;
+	}
 
 	ch->SetTransmutation(new CTransmutation(ch, bType));
 }
