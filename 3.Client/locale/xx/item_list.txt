@@ -1,0 +1,3 @@
+72325	ETC	icon/item/72325.tga
+72326	ETC	icon/item/72326.tga
+72341	ETC	icon/item/72326.tga

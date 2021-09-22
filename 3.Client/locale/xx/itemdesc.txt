@@ -1,0 +1,3 @@
+72325	Transmutation Reversal	Reverses the transmutation of an item.
+72326	Transmutation Ticket	Use this ticket to change the appearance of your equipment without spending Yang.
+72341	Transmutation Ticket	Use this item to change the appearance of your equipment without spending Yang. The item is tradeable.
