@@ -66,11 +66,3 @@
     if app.BL_TRANSMUTATION_SYSTEM:
 		def __ChangeWindowOpen(self, type):
 			self.interface.ChangeWindowOpen(type)
-
-		## HilightSlot Change	
-		def DeactivateSlot(self, slotindex, type):
-			self.interface.DeactivateSlot(slotindex, type)
-		
-		## HilightSlot Change	
-		def ActivateSlot(self, slotindex, type):
-			self.interface.ActivateSlot(slotindex, type)

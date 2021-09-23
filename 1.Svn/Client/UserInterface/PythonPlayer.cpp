@@ -74,7 +74,9 @@ void CPythonPlayer::SetChangeLookItemData(TPacketGCTransmutationItemSet& data)
 		return;
 
 	m_ChangeLookSlot[data.bSlotType] = data;
+#if defined(__BL_ENABLE_PICKUP_ITEM_EFFECT__)
 	PyCallClassMemberFunc(m_ppyGameWindow, "ActivateSlot", Py_BuildValue("(ii)", data.wCell, UI::ESlotHilight::HILIGHTSLOT_CHANGE_LOOK));
+#endif
 }
 
 TPacketGCTransmutationItemSet* CPythonPlayer::GetChangeLookItemData(const BYTE bSlotType)
@@ -92,8 +94,10 @@ void CPythonPlayer::DelChangeLookItemData(const BYTE bSlotType, const bool bClea
 
 	TPacketGCTransmutationItemSet& rInstance = m_ChangeLookSlot[bSlotType];
 
+#if defined(__BL_ENABLE_PICKUP_ITEM_EFFECT__)
 	if (bClearEffect && rInstance.wCell < c_Inventory_Count)
 		PyCallClassMemberFunc(m_ppyGameWindow, "DeactivateSlot", Py_BuildValue("(ii)", rInstance.wCell, UI::ESlotHilight::HILIGHTSLOT_CHANGE_LOOK));
+#endif
 
 	ZeroMemory(&rInstance, sizeof(rInstance));
 	rInstance.wCell = c_Inventory_Count;
@@ -102,7 +106,9 @@ void CPythonPlayer::DelChangeLookItemData(const BYTE bSlotType, const bool bClea
 void CPythonPlayer::SetChangeLookFreeItemData(TPacketGCTransmutationItemSet& data)
 {
 	m_ChangeLookFreeYangItemSlot = data;
+#if defined(__BL_ENABLE_PICKUP_ITEM_EFFECT__)
 	PyCallClassMemberFunc(m_ppyGameWindow, "ActivateSlot", Py_BuildValue("(ii)", data.wCell, UI::ESlotHilight::HILIGHTSLOT_CHANGE_LOOK));
+#endif
 }
 
 TPacketGCTransmutationItemSet* CPythonPlayer::GetChangeLookFreeItemData()
@@ -112,8 +118,10 @@ TPacketGCTransmutationItemSet* CPythonPlayer::GetChangeLookFreeItemData()
 
 void CPythonPlayer::DelChangeLookFreeItemData(const bool bClearEffect)
 {
+#if defined(__BL_ENABLE_PICKUP_ITEM_EFFECT__)
 	if (bClearEffect && m_ChangeLookFreeYangItemSlot.wCell < c_Inventory_Count)
 		PyCallClassMemberFunc(m_ppyGameWindow, "DeactivateSlot", Py_BuildValue("(ii)", m_ChangeLookFreeYangItemSlot.wCell, UI::ESlotHilight::HILIGHTSLOT_CHANGE_LOOK));
+#endif
 
 	ZeroMemory(&m_ChangeLookFreeYangItemSlot, sizeof(m_ChangeLookFreeYangItemSlot));
 	m_ChangeLookFreeYangItemSlot.wCell = c_Inventory_Count;

@@ -35,7 +35,6 @@
 					self.wndItem.SetSlotCoverImage(i,"icon/item/ingame_convert_Mark.tga")
 				else:
 					self.wndItem.EnableSlotCoverImage(i,False)
-				self.__HighlightSlot_Refresh()
 
 #Find in def RefreshEquipSlotWindow(self):
 			setItemVNum(slotNumber, getItemVNum(slotNumber), itemCount)
@@ -153,16 +152,6 @@
 
 #Add
 	if app.BL_TRANSMUTATION_SYSTEM:
-		## HilightSlot Change
-		def DeactivateSlot(self, slotindex, type):
-			if type == wndMgr.HILIGHTSLOT_CHANGE_LOOK:
-				self.__DelHighlightSlotChangeLook(slotindex)
-
-		## HilightSlot Change
-		def ActivateSlot(self, slotindex, type):
-			if type == wndMgr.HILIGHTSLOT_CHANGE_LOOK:
-				self.__AddHighlightSlotChangeLook(slotindex)
-		
 		def __AddHighlightSlotChangeLook(self, slotIndex):
 			if not slotIndex in self.listHighlightedChangeLookSlot:
 				self.listHighlightedChangeLookSlot.append(slotIndex)
@@ -170,23 +159,45 @@
 		def __DelHighlightSlotChangeLook(self, slotIndex):
 			if slotIndex in self.listHighlightedChangeLookSlot:
 				if slotIndex >= player.INVENTORY_PAGE_SIZE:
-					self.wndItem.DeactivateNewSlotEffect(slotIndex - (self.inventoryPageIndex * player.INVENTORY_PAGE_SIZE) )
+					self.wndItem.DeactivateSlot(slotIndex - (self.inventoryPageIndex * player.INVENTORY_PAGE_SIZE) )
 				else:
-					self.wndItem.DeactivateNewSlotEffect(slotIndex)
+					self.wndItem.DeactivateSlot(slotIndex)
 				self.listHighlightedChangeLookSlot.remove(slotIndex)
 
-		def __HighlightSlot_Refresh(self):
-		## 악세서리.
-			for i in xrange(self.wndItem.GetSlotCount()):
-				slotNumber = self.__InventoryLocalSlotPosToGlobalSlotPos(i)
-				if slotNumber in self.listHighlightedChangeLookSlot:
-					self.wndItem.ActivateNewSlotEffect(i)
-					self.wndItem.SetNewSlotDiffuseColor(i, wndMgr.COLOR_TYPE_RED)
+#Find in def ActivateSlot(self, slotindex, type):
+			if type == wndMgr.HILIGHTSLOT_MAX:
+				return
+#Add
+			if app.BL_TRANSMUTATION_SYSTEM:
+				if type == wndMgr.HILIGHTSLOT_CHANGE_LOOK:
+					self.__AddHighlightSlotChangeLook(slotindex)
 
-		def __HighlightSlot_Clear(self):
-		## 악세서리
-			for i in xrange(self.wndItem.GetSlotCount()):
-				slotNumber = self.__InventoryLocalSlotPosToGlobalSlotPos(i)
-				if slotNumber in self.listHighlightedChangeLookSlot:
-					self.wndItem.DeactivateNewSlotEffect(i)
-					self.listHighlightedChangeLookSlot.remove(slotNumber)
+#Find in def DeactivateSlot(self, slotindex, type):
+			if type == wndMgr.HILIGHTSLOT_MAX:
+				return
+
+#Add
+			if app.BL_TRANSMUTATION_SYSTEM:
+				if type == wndMgr.HILIGHTSLOT_CHANGE_LOOK:
+					self.__DelHighlightSlotChangeLook(slotindex)
+
+#Find in __HighlightSlot_Refresh
+				if slotNumber in self.listHighlightedSlot:
+					self.wndItem.ActivateSlot(i)
+
+#Add
+				if app.BL_TRANSMUTATION_SYSTEM:
+					if slotNumber in self.listHighlightedChangeLookSlot:
+						self.wndItem.ActivateSlot(i)
+						self.wndItem.SetSlotDiffuseColor(i, wndMgr.COLOR_TYPE_RED)
+
+#Find in def __HighlightSlot_Clear(self):
+				if slotNumber in self.listHighlightedSlot:
+					self.wndItem.DeactivateSlot(i)
+					self.listHighlightedSlot.remove(slotNumber)
+
+#Add in
+				if app.BL_TRANSMUTATION_SYSTEM:
+					if slotNumber in self.listHighlightedChangeLookSlot:
+						self.wndItem.DeactivateSlot(i)
+						self.listHighlightedChangeLookSlot.remove(slotNumber)
