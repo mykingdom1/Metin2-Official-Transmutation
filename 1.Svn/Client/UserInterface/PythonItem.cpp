@@ -17,17 +17,30 @@ static bool _CanAddTransmutationItem(const CItemData* item)
 	switch (static_cast<ETRANSMUTATIONTYPE>(bType))
 	{
 	case ETRANSMUTATIONTYPE::TRANSMUTATION_TYPE_MOUNT:
-		/// Edit here for your mount system
+#if defined(ENABLE_MOUNT_COSTUME_SYSTEM)
+		if (item->IsCostumeMount())
+			return true;
+#endif
 		break;
+
 	case ETRANSMUTATIONTYPE::TRANSMUTATION_TYPE_ITEM:
-		if (bItemType == CItemData::EItemType::ITEM_TYPE_WEAPON && bItemSubType != CItemData::EWeaponSubTypes::WEAPON_ARROW)
-			return true;
+		if (item->IsMainWeapon()
+#if defined(ENABLE_WEAPON_COSTUME_SYSTEM)
+			|| item->IsCostumeWeapon()
+#endif
+			) return true;
 
-		if (bItemType == CItemData::EItemType::ITEM_TYPE_ARMOR && bItemSubType == CItemData::EArmorSubTypes::ARMOR_BODY)
-			return true;
+		if (item->IsArmorBody()
+#if defined(ENABLE_COSTUME_SYSTEM)
+			|| item->IsCostumeBody()
+#endif
+			) return true;
 
-		if (bItemType == CItemData::EItemType::ITEM_TYPE_COSTUME && bItemSubType == CItemData::ECostumeSubTypes::COSTUME_BODY)
+#if defined(ENABLE_COSTUME_SYSTEM)
+		if (item->IsCostumeBody())
 			return true;
+#endif
+
 		break;
 	}
 
@@ -41,15 +54,50 @@ static bool _CheckOtherTransmutationItem(const CItemData* item, const CItemData*
 	
 	if (other_item->GetIndex() == item->GetIndex())
 		return false;
-	
+
+#if defined(ENABLE_COSTUME_SYSTEM)
 	if (other_item->GetType() != item->GetType())
-		return false;
+	{
+		bool bCanPass = false;
+		if ((other_item->IsCostumeBody() && item->IsArmorBody()) ||
+			(other_item->IsArmorBody() && item->IsCostumeBody()))
 
-	if (other_item->GetSubType() != item->GetSubType())
-		return false;
+			bCanPass = true;
 
-	if (other_item->GetAntiFlags() != item->GetAntiFlags())
-		return false;
+		if ((other_item->IsCostumeWeapon() && item->IsMainWeapon() && other_item->GetValue(3) == item->GetSubType()) ||
+			(other_item->IsMainWeapon() && item->IsCostumeWeapon() && other_item->GetSubType() == item->GetValue(3)))
+			bCanPass = true;
+
+		return bCanPass;
+	}
+	else
+#endif
+	{
+		if (other_item->GetType() != item->GetType())
+			return false;
+
+		if (other_item->GetSubType() != item->GetSubType())
+			return false;
+
+		if (item->IsArmor() || item->IsMainWeapon())
+			if (other_item->GetAntiFlags() != item->GetAntiFlags())
+				return false;
+
+#if defined(ENABLE_COSTUME_SYSTEM)
+		if (other_item->IsCostumeBody() == item->IsCostumeBody())
+		{
+			if ((other_item->IsAntiFlag(CItemData::ITEM_ANTIFLAG_FEMALE) && item->IsAntiFlag(CItemData::ITEM_ANTIFLAG_MALE)) ||
+				(other_item->IsAntiFlag(CItemData::ITEM_ANTIFLAG_MALE) && item->IsAntiFlag(CItemData::ITEM_ANTIFLAG_FEMALE)))
+				return false;
+		}
+#endif
+
+#if defined(ENABLE_WEAPON_COSTUME_SYSTEM)
+		if (item->IsCostumeWeapon())
+			if ((item->GetValue(3) != other_item->GetValue(3)))
+				return false;
+#endif
+	}
 
 	return true;
 }

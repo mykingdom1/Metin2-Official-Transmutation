@@ -24,6 +24,7 @@ public:
 	void FreeItemCheckOut();
 	
 	void Accept();
+	void Clear();
 	
 	bool IsTypeItem() const;
 	bool IsTypeMount() const;

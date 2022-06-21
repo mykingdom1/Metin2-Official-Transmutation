@@ -157,3 +157,16 @@ DWORD CItem::GetTransmutationVnum() const
 	return m_dwTransmutationVnum;
 }
 #endif
+
+//Find
+		ITEM_MANAGER::instance().RemoveItem(item, "REAL_TIME_EXPIRE");
+
+///Add above
+#if defined(__BL_TRANSMUTATION__)
+		if (LPCHARACTER ch = item->GetOwner())
+		{
+			CTransmutation* pTransmutation = ch->GetTransmutation();
+			if (pTransmutation != nullptr)
+				pTransmutation->Clear();
+		}
+#endif

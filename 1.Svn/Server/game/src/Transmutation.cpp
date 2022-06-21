@@ -210,6 +210,13 @@ void CTransmutation::Accept()
 		ITEM_MANAGER::instance().RemoveItem(free, "REMOVE (Transmutation - Free Item)");
 }
 
+void CTransmutation::Clear()
+{
+	/*Clear Slots*/
+	for (size_t i = 0; i < m_Item.size(); i++)
+		ItemCheckOut(i);
+}
+
 bool CTransmutation::CanAddItem(const LPITEM item) const
 {
 	const BYTE bItemType = item->GetType();
@@ -218,17 +225,30 @@ bool CTransmutation::CanAddItem(const LPITEM item) const
 	switch (m_type)
 	{
 	case ETRANSMUTATIONTYPE::TRANSMUTATION_TYPE_MOUNT:
-		/// Edit here for your mount system
+#if defined(__MOUNT_COSTUME_SYSTEM__)
+		if (item->IsCostumeBody())
+			return true;
+#endif
 		break;
+
 	case ETRANSMUTATIONTYPE::TRANSMUTATION_TYPE_ITEM:
-		if (bItemType == EItemTypes::ITEM_WEAPON && bItemSubType != EWeaponSubTypes::WEAPON_ARROW)
-			return true;
+		if (item->IsMainWeapon()
+#if defined(__WEAPON_COSTUME_SYSTEM__)
+			|| item->IsCostumeWeapon()
+#endif
+			) return false;
 
-		if (bItemType == EItemTypes::ITEM_ARMOR && bItemSubType == EArmorSubTypes::ARMOR_BODY)
-			return true;
+		if (item->IsArmorBody()
+#if defined(__COSTUME_SYSTEM__)
+			|| item->IsCostumeBody()
+#endif
+			) return true;
 
-		if (bItemType == EItemTypes::ITEM_COSTUME && bItemSubType == ECostumeSubTypes::COSTUME_BODY)
+#if defined(__COSTUME_SYSTEM__)
+		if (item->IsCostumeBody())
 			return true;
+#endif
+
 		break;
 	}
 
@@ -247,14 +267,50 @@ bool CTransmutation::CheckOtherItem(const LPITEM item) const
 	if (other_item->GetVnum() == item->GetVnum())
 		return false;
 
-	if (other_item->GetType() != item->GetType())
-		return false;
+#if defined(__COSTUME_SYSTEM__)
+	if (item->GetType() != other_item->GetType())
+	{
+		bool bCanPass = false;
+		if ((item->IsCostumeBody() && other_item->IsArmorBody()) ||
+			(item->IsArmorBody() && other_item->IsCostumeBody()))
+			bCanPass = true;
 
-	if (other_item->GetSubType() != item->GetSubType())
-		return false;
+#	if defined(__WEAPON_COSTUME_SYSTEM__)
+		if ((item->IsCostumeWeapon() && other_item->IsMainWeapon() && item->GetValue(3) == other_item->GetSubType()) ||
+			(item->IsMainWeapon() && other_item->IsCostumeWeapon() && item->GetSubType() == other_item->GetValue(3)))
+			bCanPass = true;
+#	endif
 
-	if (other_item->GetAntiFlag() != item->GetAntiFlag())
-		return false;
+		return bCanPass;
+	}
+	else
+#endif
+	{
+		if (other_item->GetType() != item->GetType())
+			return false;
+
+		if (other_item->GetSubType() != item->GetSubType())
+			return false;
+
+		if (other_item->IsArmor() || other_item->IsMainWeapon())
+			if (other_item->GetAntiFlag() != item->GetAntiFlag())
+				return false;
+
+#if defined(__COSTUME_SYSTEM__)
+		if (item->IsCostumeBody() == other_item->IsCostumeBody())
+		{
+			if ((IS_SET(item->GetAntiFlag(), ITEM_ANTIFLAG_FEMALE) && IS_SET(other_item->GetAntiFlag(), ITEM_ANTIFLAG_MALE)) ||
+				(IS_SET(item->GetAntiFlag(), ITEM_ANTIFLAG_MALE) && IS_SET(other_item->GetAntiFlag(), ITEM_ANTIFLAG_FEMALE)))
+				return false;
+		}
+#endif
+
+#if defined(__WEAPON_COSTUME_SYSTEM__)
+		if (other_item->IsCostumeWeapon())
+			if ((other_item->GetValue(3) != item->GetValue(3)))
+				return false;
+#endif
+	}
 
 	return true;
 }

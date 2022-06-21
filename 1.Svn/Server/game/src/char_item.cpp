@@ -72,3 +72,53 @@
 			|| GetTransmutation()
 #endif
 		)
+
+// Find
+	if (false == FN_check_item_sex(this, item))
+	{
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("성별이 맞지않아 이 아이템을 사용할 수 없습니다."));
+		return false;
+	}
+
+///Add below
+#if defined(__BL_TRANSMUTATION__) && defined(__COSTUME_SYSTEM__)
+	DWORD dwTransmutationVnum = item->GetTransmutationVnum();
+	if (dwTransmutationVnum != 0)
+	{
+		TItemTable* pItemTable = ITEM_MANAGER::instance().GetTable(dwTransmutationVnum);
+		if (pItemTable && (pItemTable->GetType() == ITEM_COSTUME))
+		{
+			if ((IS_SET(pItemTable->GetAntiFlags(), ITEM_ANTIFLAG_MALE) && SEX_MALE == GET_SEX(this)) ||
+				(IS_SET(pItemTable->GetAntiFlags(), ITEM_ANTIFLAG_FEMALE) && SEX_FEMALE == GET_SEX(this)))
+			{
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("[Transmutation] You cannot equip the transmuted item as it does not match your gender."));
+				return false;
+			}
+		}
+	}
+#endif
+
+// Find
+	if (FN_check_item_sex(this, item) == false)
+	{
+		ChatPacket(CHAT_TYPE_INFO, LC_TEXT("성별이 맞지않아 이 아이템을 사용할 수 없습니다."));
+		return false;
+	}
+
+///Add below
+#if defined(__BL_TRANSMUTATION__) && defined(__COSTUME_SYSTEM__)
+	DWORD dwTransmutationVnum = item->GetTransmutationVnum();
+	if (dwTransmutationVnum != 0)
+	{
+		TItemTable* pItemTable = ITEM_MANAGER::instance().GetTable(dwTransmutationVnum);
+		if (pItemTable && (pItemTable->GetType() == ITEM_COSTUME))
+		{
+			if ((IS_SET(pItemTable->GetAntiFlags(), ITEM_ANTIFLAG_MALE) && SEX_MALE == GET_SEX(this)) ||
+				(IS_SET(pItemTable->GetAntiFlags(), ITEM_ANTIFLAG_FEMALE) && SEX_FEMALE == GET_SEX(this)))
+			{
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT("[Transmutation] You cannot equip the transmuted item as it does not match your gender."));
+				return false;
+			}
+		}
+	}
+#endif
