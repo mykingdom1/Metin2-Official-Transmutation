@@ -36,11 +36,6 @@ static bool _CanAddTransmutationItem(const CItemData* item)
 #endif
 			) return true;
 
-#if defined(ENABLE_COSTUME_SYSTEM)
-		if (item->IsCostumeBody())
-			return true;
-#endif
-
 		break;
 	}
 
@@ -64,9 +59,11 @@ static bool _CheckOtherTransmutationItem(const CItemData* item, const CItemData*
 
 			bCanPass = true;
 
+#	if defined(ENABLE_WEAPON_COSTUME_SYSTEM)
 		if ((other_item->IsCostumeWeapon() && item->IsMainWeapon() && other_item->GetValue(3) == item->GetSubType()) ||
 			(other_item->IsMainWeapon() && item->IsCostumeWeapon() && other_item->GetSubType() == item->GetValue(3)))
 			bCanPass = true;
+#	endif
 
 		return bCanPass;
 	}

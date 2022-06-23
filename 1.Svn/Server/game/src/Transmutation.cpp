@@ -226,7 +226,7 @@ bool CTransmutation::CanAddItem(const LPITEM item) const
 	{
 	case ETRANSMUTATIONTYPE::TRANSMUTATION_TYPE_MOUNT:
 #if defined(__MOUNT_COSTUME_SYSTEM__)
-		if (item->IsCostumeBody())
+		if (item->IsCostumeMount())
 			return true;
 #endif
 		break;
@@ -236,18 +236,13 @@ bool CTransmutation::CanAddItem(const LPITEM item) const
 #if defined(__WEAPON_COSTUME_SYSTEM__)
 			|| item->IsCostumeWeapon()
 #endif
-			) return false;
+			) return true;
 
 		if (item->IsArmorBody()
 #if defined(__COSTUME_SYSTEM__)
 			|| item->IsCostumeBody()
 #endif
 			) return true;
-
-#if defined(__COSTUME_SYSTEM__)
-		if (item->IsCostumeBody())
-			return true;
-#endif
 
 		break;
 	}
